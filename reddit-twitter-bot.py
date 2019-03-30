@@ -7,6 +7,21 @@
 import config
 import praw
 import tweepy
+import time
+
+POSTS = "reddit-posts.json"
+
+def write_reddit_list(posts):
+    with open(POSTS, 'w', encoding='utf-8') as f:
+        for post in posts:
+            f.write(post.title)
+
+def read_reddit_list(POSTS):
+    with open(POSTS, 'r', enconding='utf-8') as f:
+        posts = f.readlines()
+    
+    return posts
+
 
 #reddit
 reddit = praw.Reddit(client_id=config.REDDIT_CLIENT_ID, 
@@ -28,4 +43,5 @@ api = tweepy.API(auth)
 for submission in subreddit.hot(limit=3):
     if submission.title != 'Welcome to /r/artificial!':
         tweet = submission.title + "\n" + submission.url + "\n" "#AI #ArtificialIntelligence #drjmpBot"
-        api.update_status(tweet) #need to add a randomized delay between posts
+        api.update_status(tweet) 
+        time.sleep(5)
