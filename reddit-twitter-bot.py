@@ -8,15 +8,31 @@ import config
 import praw
 import tweepy
 import time
+import json
 
-POSTS = "reddit-posts.json"
+posts_file = "reddit-posts.json"
 
+
+# write out the daily list of reddit posts we want to use for twitter
 def write_reddit_list(posts):
-    with open(POSTS, 'w', encoding='utf-8') as f:
-        for post in posts:
-            f.write(post.title)
+    
+    data = {}
+    data['posts'] = []
+    
+    # do in loop
+    for post in posts:
+        if post.title != 'Welcome to /r/artificial!':
+            data['posts'].append( {
+                'title': post.title,
+                'url': post.url,
+                'tags': "#AI #ArtificialIntelligence #drjmpBot"
+            })
 
-def read_reddit_list(POSTS):
+    with open(posts_file, 'w') as outfile:
+        json.dump(data, outfile)
+        
+
+def read_reddit_list(posts_file):
     with open(POSTS, 'r', enconding='utf-8') as f:
         posts = f.readlines()
     
@@ -34,14 +50,16 @@ reddit.read_only = True
 
 subreddit = reddit.subreddit('artificial')
 
+write_reddit_list(subreddit.hot(limit=5))
+
 #twitter
 auth = tweepy.OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_SECRET)
 auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 # build and post tweet
-for submission in subreddit.hot(limit=3):
-    if submission.title != 'Welcome to /r/artificial!':
-        tweet = submission.title + "\n" + submission.url + "\n" "#AI #ArtificialIntelligence #drjmpBot"
-        api.update_status(tweet) 
-        time.sleep(5)
+#for submission in subreddit.hot(limit=3):
+#    if submission.title != 'Welcome to /r/artificial!':
+#        tweet = submission.title + "\n" + submission.url + "\n" "#AI #ArtificialIntelligence #drjmpBot"
+#        api.update_status(tweet) 
+#        time.sleep(5)
