@@ -7,55 +7,61 @@
 import config
 import praw
 import tweepy
-import time
+import datetime
 import json
 
-posts_file = "reddit-posts.json"
+today = datetime.datetime.today().strftime('%Y%m%d%H%M%S')
 
+posts_file = "-posts-" + today + ".json"
+
+subreddits_list = ['artificial', 'futurology', 'MachineLearning', 'compsci', 'learnprogramming']
+
+tags = ['#AI #ArtificialIntelligence #drjmpBot', '#futurolog #drjmpBot', '#MachineLearning, #drjmpBot', 
+'#ComputerScience #drjmpbot, #learnprogramming, #drjmpbot']
+
+blacklist_posts = ["Welcome to /r/artificial!", ]
 
 # write out the daily list of reddit posts we want to use for twitter
-def write_reddit_list(posts):
-    
+def write_reddit_list(posts, subreddit):
     data = {}
     data['posts'] = []
     
     # do in loop
     for post in posts:
-        if post.title != 'Welcome to /r/artificial!':
+        if post.title != 'Welcome to r/':
             data['posts'].append( {
                 'title': post.title,
                 'url': post.url,
-                'tags': "#AI #ArtificialIntelligence #drjmpBot"
+                #'tags': "#AI #ArtificialIntelligence #drjmpBot"
             })
 
-    with open(posts_file, 'w') as outfile:
+    with open(subreddit + posts_file, 'a+') as outfile:
         json.dump(data, outfile)
         
-
-def read_reddit_list(posts_file):
-    with open(POSTS, 'r', enconding='utf-8') as f:
-        posts = f.readlines()
-    
-    return posts
-
-
-#reddit
-reddit = praw.Reddit(client_id=config.REDDIT_CLIENT_ID, 
+def get_reddit_posts():
+    reddit = praw.Reddit(client_id=config.REDDIT_CLIENT_ID, 
     client_secret=config.REDDIT_CLIENT_SECRET, 
     password=config.REDDIT_PASSWORD, 
     user_agent='aggregator bot by /u/drjmp', 
     username=config.REDDIT_USER)
 
-reddit.read_only = True
+    reddit.read_only = True
 
-subreddit = reddit.subreddit('artificial')
+    for subreddit in subreddits_list:
+        posts = reddit.subreddit(subreddit)
+        write_reddit_list(posts.hot(limit=5), subreddit)
 
-write_reddit_list(subreddit.hot(limit=5))
+def main():
+    get_reddit_posts()
 
+
+main()
+
+# THIS IS GOING TO MOVE TO ANOTHER SERVICE
 #twitter
-auth = tweepy.OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_SECRET)
-auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
-api = tweepy.API(auth)
+#auth = tweepy.OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_SECRET)
+#auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
+#api = tweepy.API(auth)
 
 # build and post tweet
 #for submission in subreddit.hot(limit=3):
