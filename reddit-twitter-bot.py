@@ -3,7 +3,7 @@
 # Created on 03/25/2019
 # @author: Jason M. Pittman
 # @license: MIT-license
-# Purpose: Pull content from specific subreddits and post to Twitter
+# Purpose: Pull content from specific subreddits and serialize to JSON
 import config
 import praw
 import tweepy
@@ -14,25 +14,39 @@ today = datetime.datetime.today().strftime('%Y%m%d%H%M%S')
 
 posts_file = "-posts-" + today + ".json"
 
+# to add a new subreddit, add the name to this array and the tags to the dictoinary below using name: tags format
 subreddits_list = ['artificial', 'futurology', 'MachineLearning', 'compsci', 'learnprogramming']
 
-tags = ['#AI #ArtificialIntelligence #drjmpBot', '#futurolog #drjmpBot', '#MachineLearning, #drjmpBot', 
-'#ComputerScience #drjmpbot, #learnprogramming, #drjmpbot']
+tags = {
+        "artificial": "#AI #ArtificialIntelligence #drjmpBot",
+        "futurology": '#futurology #drjmpBot',
+        "MachineLearning": '#MachineLearning, #drjmpBot', 
+        "compsci": '#ComputerScience #drjmpbot',
+        "learnprogramming": '#learnprogramming, #drjmpbot'
+}
 
-blacklist_posts = ["Welcome to /r/artificial!", ]
+#the subreddit pull in PRAW gets the home banner. we want to strip them
+blacklist_posts = {
+        "artificial": "Welcome to /r/artificial!",
+        "futurology": "r/Futurology's Official Discord",
+        "MachineLearning": "[N] Chat with us on Slack!",
+        "compsci": "CompSci Weekend SuperThread",
+        "learnprogramming": "New? READ ME FIRST!"
+}
 
 # write out the daily list of reddit posts we want to use for twitter
 def write_reddit_list(posts, subreddit):
+
     data = {}
     data['posts'] = []
     
     # do in loop
     for post in posts:
-        if post.title != 'Welcome to r/':
+        if blacklist_posts[subreddit] not in post.title:
             data['posts'].append( {
                 'title': post.title,
                 'url': post.url,
-                #'tags': "#AI #ArtificialIntelligence #drjmpBot"
+                'tags': tags[subreddit]
             })
 
     with open(subreddit + posts_file, 'a+') as outfile:
