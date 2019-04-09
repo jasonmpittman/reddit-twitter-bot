@@ -5,11 +5,41 @@
 # @license: MIT-license
 # Purpose: Read reddit posts from JSON and create tweets
 
+import tweepy 
+import datetime
+import os
+import json
+
+today = datetime.datetime.today().strftime('%Y%m%d')
+posts_file = "-posts-" + today + ".json"
+
+subreddits_list = ['artificial', 'futurology', 'MachineLearning', 'compsci', 'learnprogramming']
+
+#read in json objects from randomly select reddit json file
+#we need to load only if nonempty of course
+def read_reddit_posts():
+    #
+
+    for subreddit in subreddits_list:
+        posts = subreddit + posts_file
+
+        if os.path.getsize(posts) > 0:
+            with open(posts, 'r') as f:
+                data = json.load(f)
+
+    return data #this works but obviously overwrites each loop...
+
+#create twitter post based on randomly selected reddit post from json objects
+
+#pop the selected post from the objects and rewrite the json file out
 
 
+def main():
+    posts = read_reddit_posts()
 
+    print(posts)
 
-
+main()
 
 # THIS IS GOING TO MOVE TO ANOTHER SERVICE
 #twitter

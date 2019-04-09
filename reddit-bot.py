@@ -6,11 +6,10 @@
 # Purpose: Pull content from specific subreddits and serialize to JSON
 import config
 import praw
-import tweepy
 import datetime
 import json
 
-today = datetime.datetime.today().strftime('%Y%m%d%H%M%S')
+today = datetime.datetime.today().strftime('%Y%m%d')
 
 posts_file = "-posts-" + today + ".json"
 
@@ -70,16 +69,3 @@ def main():
 
 
 main()
-
-# THIS IS GOING TO MOVE TO ANOTHER SERVICE
-#twitter
-#auth = tweepy.OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_SECRET)
-#auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
-#api = tweepy.API(auth)
-
-# build and post tweet
-#for submission in subreddit.hot(limit=3):
-#    if submission.title != 'Welcome to /r/artificial!':
-#        tweet = submission.title + "\n" + submission.url + "\n" "#AI #ArtificialIntelligence #drjmpBot"
-#        api.update_status(tweet) 
-#        time.sleep(5)
