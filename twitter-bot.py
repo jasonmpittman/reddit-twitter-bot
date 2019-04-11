@@ -9,6 +9,7 @@ import tweepy
 import datetime
 import os
 import json
+import sys
 
 today = datetime.datetime.today().strftime('%Y%m%d')
 posts_file = "-posts-" + today + ".json"
@@ -17,15 +18,15 @@ subreddits_list = ['artificial', 'futurology', 'MachineLearning', 'compsci', 'le
 
 #read in json objects from randomly select reddit json file
 #we need to load only if nonempty of course
-def read_reddit_posts():
-    #
+def read_reddit_posts(): #modify to accept subreddit as function parameter
+    data = {}
 
-    for subreddit in subreddits_list:
+    for subreddit in subreddits_list: #this for loop isn't necessary; we can just go to the correct file
         posts = subreddit + posts_file
 
         if os.path.getsize(posts) > 0:
-            with open(posts, 'r') as f:
-                data = json.load(f)
+            with open(posts, 'r') as json_file:
+                json.load(json_file) #do we want to load the entire json or just the 'first' entry
 
     return data #this works but obviously overwrites each loop...
 
@@ -35,9 +36,10 @@ def read_reddit_posts():
 
 
 def main():
-    posts = read_reddit_posts()
+    print(sys.argv[1])
+    #posts = read_reddit_posts()
 
-    print(posts)
+    #print(posts)
 
 main()
 
