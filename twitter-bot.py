@@ -16,30 +16,34 @@ posts_file = "-posts-" + today + ".json"
 
 subreddits_list = ['artificial', 'futurology', 'MachineLearning', 'compsci', 'learnprogramming']
 
-#read in json objects from randomly select reddit json file
-#we need to load only if nonempty of course
-def read_reddit_posts(): #modify to accept subreddit as function parameter
+def read_reddit_posts(subreddit): 
     data = {}
 
-    for subreddit in subreddits_list: #this for loop isn't necessary; we can just go to the correct file
-        posts = subreddit + posts_file
+    posts = subreddit + posts_file
 
-        if os.path.getsize(posts) > 0:
-            with open(posts, 'r') as json_file:
-                json.load(json_file) #do we want to load the entire json or just the 'first' entry
+    if os.path.getsize(posts) > 0:
+        with open(posts, 'r') as json_file:
+            data = json.load(json_file) 
 
-    return data #this works but obviously overwrites each loop...
+    post = data['posts'][0]
 
-#create twitter post based on randomly selected reddit post from json objects
+    #return data #this works
+    return post #this correctly selects first post from posts in json
 
 #pop the selected post from the objects and rewrite the json file out
 
 
 def main():
-    print(sys.argv[1])
-    #posts = read_reddit_posts()
-
-    #print(posts)
+    subreddit = sys.argv[1]
+    post = read_reddit_posts(subreddit)
+    print(post)
+    #for post in posts['posts']:
+        #print(post['title'])
+        #print(post['url'])
+        #print(post['tags'])
+        
+    
+    
 
 main()
 

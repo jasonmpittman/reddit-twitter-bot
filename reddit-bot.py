@@ -38,7 +38,7 @@ def write_reddit_list(posts, subreddit):
 
     data = {}
     data['posts'] = []
-    
+
     # do in loop
     for post in posts:
         if blacklist_posts[subreddit] not in post.title:
