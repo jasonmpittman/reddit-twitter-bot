@@ -10,6 +10,7 @@ import datetime
 import os
 import json
 import sys
+import config
 
 today = datetime.datetime.today().strftime('%Y%m%d')
 posts_file = "-posts-" + today + ".json"
@@ -25,37 +26,32 @@ def read_reddit_posts(subreddit):
         with open(posts, 'r') as json_file:
             data = json.load(json_file) 
 
+    #need another check here in case there are no entries in the file except for {posts:[]}
     post = data['posts'][0]
+
+    del data['posts'][0]
+    
+    with open(posts, 'w') as json_file:
+        json.dump(data, json_file)
 
     #return data #this works
     return post #this correctly selects first post from posts in json
 
-#pop the selected post from the objects and rewrite the json file out
 
+
+def post_tweet(post):
+    auth = tweepy.OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_SECRET)
+    auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
+    api = tweepy.API(auth)
+
+    # build and post tweet
+    tweet = post['title'] + "\n" + post['url'] + "\n" + post['tags']
+    print(tweet)
+    #api.update_status(tweet) 
 
 def main():
     subreddit = sys.argv[1]
     post = read_reddit_posts(subreddit)
-    print(post)
-    #for post in posts['posts']:
-        #print(post['title'])
-        #print(post['url'])
-        #print(post['tags'])
-        
+    post_tweet(post)  
     
-    
-
 main()
-
-# THIS IS GOING TO MOVE TO ANOTHER SERVICE
-#twitter
-#auth = tweepy.OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_SECRET)
-#auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
-#api = tweepy.API(auth)
-
-# build and post tweet
-#for submission in subreddit.hot(limit=3):
-#    if submission.title != 'Welcome to /r/artificial!':
-#        tweet = submission.title + "\n" + submission.url + "\n" "#AI #ArtificialIntelligence #drjmpBot"
-#        api.update_status(tweet) 
-#        time.sleep(5)
