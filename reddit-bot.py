@@ -65,7 +65,7 @@ def get_reddit_posts():
         write_reddit_list(posts.hot(limit=5), subreddit)
 
 def main():
-    get_reddit_posts()
+    get_reddit_posts() #need to add logic so that no param runs all subreddits or we can handle specific param
 
 
 main()
