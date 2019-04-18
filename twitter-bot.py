@@ -26,16 +26,21 @@ def read_reddit_posts(subreddit):
         with open(posts, 'r') as json_file:
             data = json.load(json_file) 
 
-    #need another check here in case there are no entries in the file except for {posts:[]}
-    post = data['posts'][0]
+    try:
+        post = data['posts'][0]
+    except IndexError:
+        #call reddit bot with specific subreddit parameter
+        read_reddit_posts(subreddit)
 
-    del data['posts'][0]
+    try:
+        del data['posts'][0]
+    except IndexError:
+        print("There was an index out of bounds during the del function")
     
     with open(posts, 'w') as json_file:
         json.dump(data, json_file)
 
-    #return data #this works
-    return post #this correctly selects first post from posts in json
+    return post
 
 
 
