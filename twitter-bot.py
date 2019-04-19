@@ -11,6 +11,7 @@ import os
 import json
 import sys
 import config
+from reddit_bot import *
 
 today = datetime.datetime.today().strftime('%Y%m%d')
 posts_file = "-posts-" + today + ".json"
@@ -26,21 +27,24 @@ def read_reddit_posts(subreddit):
         with open(posts, 'r') as json_file:
             data = json.load(json_file) 
 
-    try:
-        post = data['posts'][0]
-    except IndexError:
+    if data == '{"posts": []}'
         #call reddit bot with specific subreddit parameter
-        read_reddit_posts(subreddit)
+        reddit-bot.main(subreddit)
+    else:        
+        try:
+            post = data['posts'][0]
+        except IndexError:    
+            print("There was an index out of bounds during the post function")
 
-    try:
-        del data['posts'][0]
-    except IndexError:
-        print("There was an index out of bounds during the del function")
-    
-    with open(posts, 'w') as json_file:
-        json.dump(data, json_file)
+        try:
+            del data['posts'][0]
+        except IndexError:
+            print("There was an index out of bounds during the del function")
+        
+        with open(posts, 'w') as json_file:
+            json.dump(data, json_file)
 
-    return post
+        return post
 
 
 
