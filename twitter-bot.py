@@ -11,7 +11,6 @@ import os
 import json
 import sys
 import config
-from reddit_bot import *
 
 today = datetime.datetime.today().strftime('%Y%m%d')
 posts_file = "-posts-" + today + ".json"
@@ -27,10 +26,10 @@ def read_reddit_posts(subreddit):
         with open(posts, 'r') as json_file:
             data = json.load(json_file) 
 
-    if data == '{"posts": []}'
-        #call reddit bot with specific subreddit parameter
-        reddit-bot.main(subreddit)
-    else:        
+    if len(data['posts']) == 0:
+        print("There are not posts so return zero")
+        return 1
+    else:    
         try:
             post = data['posts'][0]
         except IndexError:    
@@ -46,21 +45,21 @@ def read_reddit_posts(subreddit):
 
         return post
 
-
-
 def post_tweet(post):
     auth = tweepy.OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_SECRET)
     auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
     api = tweepy.API(auth)
 
-    # build and post tweet
     tweet = post['title'] + "\n" + post['url'] + "\n" + post['tags']
-    print(tweet)
-    #api.update_status(tweet) 
+    api.update_status(tweet) 
 
 def main():
     subreddit = sys.argv[1]
     post = read_reddit_posts(subreddit)
-    post_tweet(post)  
+
+    if post != 1:
+        post_tweet(post)
+    else:
+        print("nothing to post...")    
     
 main()

@@ -34,7 +34,7 @@ blacklist_posts = {
         "learnprogramming": "New? READ ME FIRST!"
 }
 
-# write out the daily list of reddit posts we want to use for twitter
+#write out the daily list of reddit posts we want to use for twitter
 def write_reddit_list(posts, subreddit):
 
     data = {}
@@ -49,7 +49,9 @@ def write_reddit_list(posts, subreddit):
                 'tags': tags[subreddit]
             })
 
-    with open(subreddit + posts_file, 'a+') as outfile: #this leads to '{"posts": []}' being left in the json
+    with open(subreddit + posts_file, 'a+') as outfile:
+        outfile.seek(0)
+        outfile.truncate()
         json.dump(data, outfile)
         
 def get_reddit_posts(subreddit = None):
@@ -73,7 +75,6 @@ def main():
     if len(sys.argv) <= 1:
         get_reddit_posts() 
     else:
-        print(sys.argv[1])
         get_reddit_posts(sys.argv[1])
 
 main()
