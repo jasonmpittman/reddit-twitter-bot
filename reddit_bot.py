@@ -50,7 +50,7 @@ def write_reddit_list(posts, subreddit):
                 'tags': tags[subreddit]
             })
 
-    with open(os.getcwd() + "/" + subreddit + posts_file, 'a+') as outfile:
+    with open("/home/jason/reddit-twitter-bot/" + subreddit + posts_file, 'a+') as outfile:
         outfile.seek(0)
         outfile.truncate()
         json.dump(data, outfile)
