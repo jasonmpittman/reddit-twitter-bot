@@ -9,6 +9,7 @@ import praw
 import datetime
 import json
 import sys
+import os
 
 today = datetime.datetime.today().strftime('%Y%m%d')
 
@@ -49,7 +50,7 @@ def write_reddit_list(posts, subreddit):
                 'tags': tags[subreddit]
             })
 
-    with open(subreddit + posts_file, 'a+') as outfile:
+    with open(os.getcwd() + "/" + subreddit + posts_file, 'a+') as outfile:
         outfile.seek(0)
         outfile.truncate()
         json.dump(data, outfile)
