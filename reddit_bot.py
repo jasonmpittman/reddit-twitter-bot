@@ -19,11 +19,11 @@ posts_file = "-posts-" + today + ".json"
 subreddits_list = ['artificial', 'futurology', 'MachineLearning', 'compsci', 'learnprogramming']
 
 tags = {
-        "artificial": "#AI #ArtificialIntelligence #drjmpBot",
-        "futurology": '#futurology #drjmpBot',
-        "MachineLearning": '#MachineLearning, #drjmpBot', 
-        "compsci": '#ComputerScience #drjmpbot',
-        "learnprogramming": '#learnprogramming, #drjmpbot'
+        "artificial": "#AI #ArtificialIntelligence",
+        "futurology": '#futurology',
+        "MachineLearning": '#MachineLearning', 
+        "compsci": '#ComputerScience',
+        "learnprogramming": '#learnprogramming'
 }
 
 #the subreddit pull in PRAW gets the home banner. we want to strip them
