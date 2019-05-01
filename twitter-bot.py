@@ -22,7 +22,7 @@ def read_reddit_posts(subreddit):
 
     posts = subreddit + posts_file
 
-    if os.path.getsize(posts) > 0:
+    if os.path.getsize("/home/jason/reddit-twitter-bot/" + posts) > 0:
         with open("/home/jason/reddit-twitter-bot/" + posts, 'r') as json_file:
             data = json.load(json_file) 
 
