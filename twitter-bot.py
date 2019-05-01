@@ -23,7 +23,7 @@ def read_reddit_posts(subreddit):
     posts = subreddit + posts_file
 
     if os.path.getsize(posts) > 0:
-        with open(posts, 'r') as json_file:
+        with open("/home/jason/reddit-twitter-bot/" + posts, 'r') as json_file:
             data = json.load(json_file) 
 
     if len(data['posts']) == 0:
@@ -40,7 +40,7 @@ def read_reddit_posts(subreddit):
         except IndexError:
             print("There was an index out of bounds during the del function")
         
-        with open(posts, 'w') as json_file:
+        with open("/home/jason/reddit-twitter-bot/" + posts, 'w') as json_file:
             json.dump(data, json_file)
 
         return post
